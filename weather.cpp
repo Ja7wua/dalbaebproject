@@ -19,7 +19,7 @@ int main() {
     cout << "Введите город (на английском, например Moscow): ";
     cin >> city;
 
-    Response r = Get(Url{"http://openweathermap.org"},
+    Response r = Get(Url{"api.openweathermap.org/data/2.5/weather"},
                      Parameters{{"q", city}, {"appid", apiKey}, {"units", "metric"}, {"lang", "ru"}});
 
     if (r.status_code == 200) {
