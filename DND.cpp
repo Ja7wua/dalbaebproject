@@ -1,18 +1,37 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <windows.h>
-#include <string>
-#include <SFML/Graphics.hpp>
+#include <thread>
+#include <chrono>
+#include <clocale>
 
-using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
+using std::string;
+
+
+void ClearMaboy() {
+    #ifdef _WIN32
+        system("cls");
+        system("chcp 65001 > nul");
+    #else
+        system("clear");
+    #endif
+}
+
+void Sleep(int ms) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
 
 int main() {
-    
-    SetConsoleCP(CP_UTF8);
-    SetConsoleOutputCP(CP_UTF8);
+    std::setlocale(LC_ALL, "ru_RU.UTF-8");
     srand(time(0));
 
+
+    int monsterHP = 150;
+    int monsterDamage = 20;
+    int choice;
     int playerHP, playerDamage;
     int classChoice;
 
@@ -27,34 +46,35 @@ int main() {
             playerHP = 120;
             playerDamage = 12;
             cout << "Ты выбрал Воина!\n";
+            Sleep(1500);
             break;
 
         case 2:
             playerHP = 80;
             playerDamage = 25;
             cout << "Ты выбрал Лучника!\n";
+            Sleep(1500);
             break;
 
         case 3:
             playerHP = 60;
             playerDamage = 25;
             cout << "Ты выбрал Мага!\n";
+            Sleep(1500);
             break;
 
         default:
             cout << "Неверный выбор, ты стал крестьянином\n";
             playerHP = 100;
             playerDamage = 10;
+            Sleep(1500);
     }
 
-    int monsterHP = 60;
-    int monsterDamage = 20;
-    int choice;
-
-    cout << "\nПоявился монстр!\n";
+    cout << "Появился монстр!\n";
+    Sleep(1500);
 
     while (playerHP > 0 && monsterHP > 0) {
-        system("cls");
+        ClearMaboy();
         cout << "\nТвое HP: " << playerHP << endl;
         cout << "HP монстра: " << monsterHP << endl;
 
@@ -73,7 +93,7 @@ int main() {
 
         switch (choice) {
             case 1: {
-                int damage = rand() % playerDamage + 1;
+                int damage = rand() % playerDamage + 20;
                 monsterHP -= damage;
                 cout << "Ты нанес " << damage << " урона!\n";
                 Sleep(1500);
@@ -81,7 +101,7 @@ int main() {
             }
 
             case 2: {
-                int heal = rand() % 10 + 5;
+                int heal = rand() % 10 + 12;
                 playerHP += heal;
                 cout << "Ты вылечился на " << heal << " HP!\n";
                 Sleep(1500);
@@ -98,7 +118,7 @@ int main() {
                 if (success == 1) {
                     cout << "Супер удар сработал!\n";
                     Sleep(1500);
-                    int damage = (rand() % 20) * 2;
+                    int damage = (rand() % 30 + 20) * 2;
                     monsterHP -= damage;
                     cout << "СУПЕР УДАР! Урон: " << damage << endl;
                     Sleep(1500);
@@ -113,25 +133,28 @@ int main() {
                     int magicEffect = rand() % 3;
                     if (magicEffect == 0) {
                         cout << "Магия усилила твою атаку!\n";
-                        playerDamage += 5;
+                        playerDamage += 15;
                     } else if (magicEffect == 1) {
                         cout << "Магия исцелила тебя!\n";
-                        playerHP += 10;
-                    } else {
+                        playerHP += 20;
+                    } else if (magicEffect == 2) {
+                        cout << "Магия ослабила монстра!\n";
+                        monsterDamage -= 10;
+                    } else{
                         cout << "Магия не сработала...\n";
                     }
                     Sleep(2000); 
                     break;
                 } else {
                     cout << "Ты сбежал!\n";
-                    return 0;
+                    exit(0);
                 }
 
             case 5:
                 if (classChoice == 3) {
                     cout << "Ты используешь Фаер бол!\n";
                     Sleep(1500);
-                    int damage = rand() % 25 + 10;
+                    int damage = rand() % 30 + 10;
                     monsterHP -= damage;
                     cout << "Фаер бол нанес " << damage << " урона!\n";
                     Sleep(1500);
@@ -143,8 +166,8 @@ int main() {
 
             case 6:
                 if (classChoice == 3) {
-                    cout << "Ты сбежал, но монстр догнал тебя и выебал в сракотан и твои кишки выволились!\n";
-                    return 0;
+                    cout << "Ты сбежал!\n";
+                    exit(0);
                 } else {
                     cout << "Неверный выбор!\n";
                     validAction = false;
@@ -182,11 +205,13 @@ int main() {
     }
 
     if (playerHP > 0) {
-        Sleep(1500);
         cout << "\nТы победил монстра!";
+        Sleep(1500);
+        exit(0);
     } else {
         cout << "\nТы проиграл...";
         Sleep(1500);
+        exit(0);
     }
 
     return 0;
