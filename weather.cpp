@@ -13,7 +13,7 @@ using cpr::Parameters;
 using cpr::Url;
 
 int main() {
-    string apiKey = "e08f0755c19b51580b1252bb907c583b"; 
+    string apiKey = ""; 
     string city;
 
     cout << "Введите город (на английском, например Moscow): ";
